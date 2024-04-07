@@ -45,6 +45,6 @@ private:
     std::chrono::system_clock::time_point begin_;
 };
 }
-#define TIME_IT() utility::time_it p(__FILENAME__, __FUNCTION__, __LINE__);
+#define TIME_IT() utility::time_it ti(__FILENAME__, __FUNCTION__, __LINE__);
 
 #endif  // LIUCAODANGBANG_TIME_IT_H
