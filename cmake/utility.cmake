@@ -30,56 +30,56 @@ function(generate_version major minor branch_name)
     set(VERSION_MAJOR ${major})    # 一级版本号
     set(VERSION_MINOR ${minor})    # 二级版本号
 
-    set(TARGET_NAME ${branch_name}) 
+    set(TARGET_NAME ${branch_name})
 
     execute_process(
-        COMMAND git log -1 --format=%H
-        OUTPUT_VARIABLE GIT_VERSION
+            COMMAND git log -1 --format=%H
+            OUTPUT_VARIABLE GIT_VERSION
     )
 
     execute_process(
-        COMMAND git log -1 --pretty=format:%h
-        OUTPUT_VARIABLE GIT_SHORT_VERSION
+            COMMAND git log -1 --pretty=format:%h
+            OUTPUT_VARIABLE GIT_SHORT_VERSION
     )
-    
+
     if (GIT_SHORT_VERSION STREQUAL "")
         string(TIMESTAMP GIT_SHORT_VERSION "%H%M%S")
-    endif()
+    endif ()
 
     execute_process(
-        COMMAND git log -1 --pretty=format:%an
-        OUTPUT_VARIABLE GIT_AUTHOR
+            COMMAND git log -1 --pretty=format:%an
+            OUTPUT_VARIABLE GIT_AUTHOR
     )
 
     if (GIT_AUTHOR STREQUAL "")
         set(GIT_AUTHOR "lucky.liu")
-    endif()
+    endif ()
 
     execute_process(
-        COMMAND git rev-list --all --count
-        OUTPUT_VARIABLE VERSION_LEVEL3
+            COMMAND git rev-list --all --count
+            OUTPUT_VARIABLE VERSION_LEVEL3
     )
-    
+
     if (VERSION_LEVEL3 STREQUAL "")
         string(TIMESTAMP VERSION_LEVEL3 "%Y%m%d")
-    endif()
+    endif ()
 
     configure_file(
-        "config.h.in"
-        "../config.h"
+            "config.h.in"
+            "../config.h"
     )
 endfunction(generate_version)
 
 if (NOT DEFINED UTILITY_ROOT)
-    set( UTILITY_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty/utility )
-endif()
+    set(UTILITY_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty/utility)
+endif ()
 message(STATUS "UTILITY_ROOT: ${UTILITY_ROOT}")
 
 find_package(spdlog REQUIRED)
 message(STATUS "Using spdlog ${spdlog_VERSION}")
 
 add_definitions(-DBoost_USE_STATIC_LIBS=ON)
-find_package(Boost 1.65 REQUIRED COMPONENTS system filesystem)
+find_package(Boost REQUIRED COMPONENTS system filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 message(STATUS "Using Boost ${Boost_VERSION}")
 
