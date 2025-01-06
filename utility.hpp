@@ -128,7 +128,7 @@ public:
         std::string strTempPath2 = strTempPath1.substr(0, index);
         strTempPath1             = strTempPath1.substr(index, strTempPath1.size());
 
-        while (index >= 0)
+        while (index > 0)
         {
             index = strTempPath1.find(FOLDER_SEPS);
 
@@ -233,7 +233,7 @@ public:
         const char*       _input = input.c_str();
         std::stringstream _output;
 
-        for (int i = 0; i < input.size(); ++i)
+        for (size_t i = 0; i < input.size(); ++i)
         {
             unsigned char c = *_input++;
             if (((c >= 0x61 && c <= 0x7A)     // ALPHA
@@ -273,8 +273,8 @@ public:
         std::string::size_type   pos;
         std::vector<std::string> result;
         str += pattern;  // 扩展字符串以方便操作
-        int size = str.size();
-        for (int i = 0; i < size; i++)
+        size_t size = str.size();
+        for (size_t i = 0; i < size; i++)
         {
             pos = str.find(pattern, i);
             if (pos < size)
@@ -295,4 +295,3 @@ public:
 #pragma GCC diagnostic pop
 #endif
 #endif  // UTILS_HPP
-

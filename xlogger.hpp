@@ -19,7 +19,7 @@
 #ifndef XLOGGER_HPP
 #define XLOGGER_HPP
 
-#include "config.hpp"
+#include "config/config.h"
 #include "precompiled.hpp"
 #include "utility.hpp"
 
@@ -45,6 +45,20 @@
 
 #define UNUSED(x) (void)x;
 
+/*
+typedef struct
+{
+    int  level;      // TRACE 0 DEBUG 1 INFO 2 WARN 3 ERROR 4 CRITICAL 5 OFF 6
+    bool console;    // 控制台日志
+    bool file;       // 文件日志
+    int  max_files;  // 最大文件数
+    bool rotation;   // 环形日志 true 启用环形日志，false 启用轮替日志
+    int  max_size;   // 单个文件最大尺寸 单位M（环形日志启用有效）
+    int  hour;       // 日志切换时间（启用轮替日志有效）
+    int  minute;     // 日志切换时间
+    int  interval;   // 强制刷新                                                                                                                                                                  hour : 0 #日志切换时间（启用轮替日志有效） minute : 1 #日志切换时间 interval : 10 #强制刷新
+} log_config;
+ */
 namespace utility
 {
 class xlogger
@@ -54,17 +68,27 @@ class xlogger
 private:
     void create()
     {
-        config& _config = config::getInstance();
+        std::string _config_path = utility::utility::basepath();
+        _config_path += "/../config/config.yaml";
+        YAML::Node config      = YAML::LoadFile(_config_path.c_str());
 
-#ifndef _DEBUG
-        level_ = static_cast<spdlog::level::level_enum>(_config.get("global.log.level", SPDLOG_LEVEL_TRACE));
-#else
-        level_ = static_cast<spdlog::level::level_enum>(_config.get("global.log.level", SPDLOG_LEVEL_TRACE));
-#endif
+        // 解析日志
+        log_config cfg;
+        cfg.level     = config["logs"]["level"].as<int>();              // TRACE 0 DEBUG 1 INFO 2 WARN 3 ERROR 4 CRITICAL 5 OFF 6
+        cfg.console   = config["logs"]["console"].as<bool>();           // 控制台日志
+        cfg.file      = config["logs"]["file"].as<bool>();              // 文件日志
+        cfg.max_files = config["logs"]["max_files"].as<int>();  // 最大文件数
+        cfg.rotation  = config["logs"]["rotation"].as<bool>();          // 环形日志 true 启用环形日志，false 启用轮替日志
+        cfg.max_size  = config["logs"]["max_size"].as<int>();           // 单个文件最大尺寸 单位M（环形日志启用有效）
+        cfg.hour      = config["logs"]["hour"].as<int>();               // 日志切换时间（启用轮替日志有效）
+        cfg.minute    = config["logs"]["minute"].as<int>();             // 日志切换时间
+        cfg.interval  = config["logs"]["interval"].as<int>();           // 强制刷新
+
+        level_                 = static_cast<spdlog::level::level_enum>(cfg.level);
 
         std::vector<spdlog::sink_ptr> _sinkList;
 
-        if (_config.get("global.log.console", true))
+        if (cfg.console)
         {
             auto _stdoutColorSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
             _stdoutColorSink->set_level(level_);
@@ -84,24 +108,27 @@ private:
         _save_path += ".log";
 
 
-        std::size_t _max_files = _config.get("global.log.max_files", 7);
-        if (_config.get("global.log.file", false))
+        std::size_t _max_files = cfg.max_files;
+        if (cfg.file)
         {
-            std::size_t _max_size        = _config.get("global.log.max_size", 200) * 1024 * 1024;  // 默认200M
-            auto        rotatingFileSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(_save_path, _max_size, _max_files);
-            rotatingFileSink->set_level(level_);
-            rotatingFileSink->set_pattern("[%L][%Y-%m-%d %H:%M:%S.%e][%!,%@][%t] %v");
-            _sinkList.push_back(rotatingFileSink);
-        }
-        else
-        {
-            int  _rotation_hour   = _config.get("global.log.rotation_hour", 0);
-            int  _rotation_minute = _config.get("global.log.rotation_minute", 1);
-            auto dailyFileSink    = std::make_shared<spdlog::sinks::daily_file_sink_mt>(_save_path, _rotation_hour, _rotation_minute, false, static_cast<int>(_max_files * 4));
-            // auto dailyFileSink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(_save_path, _rotation_hour, _rotation_minute);
-            dailyFileSink->set_level(level_);
-            dailyFileSink->set_pattern("[%L][%Y-%m-%d %H:%M:%S.%e][%!,%@][%t] %v");
-            _sinkList.push_back(dailyFileSink);
+            if (cfg.rotation)
+            {
+                std::size_t _max_size        = cfg.max_size * 1024 * 1024;  // 默认200M
+                auto        rotatingFileSink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(_save_path, _max_size, _max_files);
+                rotatingFileSink->set_level(level_);
+                rotatingFileSink->set_pattern("[%L][%Y-%m-%d %H:%M:%S.%e][%!,%@][%t] %v");
+                _sinkList.push_back(rotatingFileSink);
+            }
+            else
+            {
+                int  _rotation_hour   = cfg.hour;
+                int  _rotation_minute = cfg.minute;
+                auto dailyFileSink    = std::make_shared<spdlog::sinks::daily_file_sink_mt>(_save_path, _rotation_hour, _rotation_minute, false, static_cast<int>(_max_files * 4));
+                // auto dailyFileSink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(_save_path, _rotation_hour, _rotation_minute);
+                dailyFileSink->set_level(level_);
+                dailyFileSink->set_pattern("[%L][%Y-%m-%d %H:%M:%S.%e][%!,%@][%t] %v");
+                _sinkList.push_back(dailyFileSink);
+            }
         }
 
         if (_sinkList.size() > 0)
@@ -119,7 +146,7 @@ private:
             spdlog::register_logger(logger_);
             logger_->flush_on(spdlog::level::critical);
 
-            spdlog::flush_every(std::chrono::seconds(_config.get("global.log.interval", 10)));
+            spdlog::flush_every(std::chrono::seconds(cfg.interval));
             logger_->set_level(level_);
         }
     }
