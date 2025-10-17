@@ -1,0 +1,7 @@
+// build.h.in
+#pragma once
+
+#define BUILD_TIMESTAMP "@BUILD_TIMESTAMP@"
+#define GIT_VERSION "@GIT_VERSION@"
+#define GIT_COMMIT_HASH "@GIT_COMMIT_HASH@"
+#define GIT_BRANCH "@GIT_BRANCH@"

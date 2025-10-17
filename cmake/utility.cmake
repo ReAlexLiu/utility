@@ -25,53 +25,53 @@ function(redefine_file_base targetname)
 endfunction(redefine_file_base)
 
 # 添加版本号，用于部署后验证程序是否升级成功
-function(generate_version major minor branch_name)
-    string(TIMESTAMP COMPILE_TIME "%Y-%m-%dT%H:%M:%S")
-    set(VERSION_MAJOR ${major})    # 一级版本号
-    set(VERSION_MINOR ${minor})    # 二级版本号
+# function(generate_version major minor branch_name)
+#     string(TIMESTAMP COMPILE_TIME "%Y-%m-%dT%H:%M:%S")
+#     set(VERSION_MAJOR ${major})    # 一级版本号
+#     set(VERSION_MINOR ${minor})    # 二级版本号
 
-    set(TARGET_NAME ${branch_name})
+#     set(TARGET_NAME ${branch_name})
 
-    execute_process(
-            COMMAND git log -1 --format=%H
-            OUTPUT_VARIABLE GIT_VERSION
-    )
+#     execute_process(
+#             COMMAND git log -1 --format=%H
+#             OUTPUT_VARIABLE GIT_VERSION
+#     )
 
-    execute_process(
-            COMMAND git log -1 --pretty=format:%h
-            OUTPUT_VARIABLE GIT_SHORT_VERSION
-    )
+#     execute_process(
+#             COMMAND git log -1 --pretty=format:%h
+#             OUTPUT_VARIABLE GIT_SHORT_VERSION
+#    )
 
-    if (GIT_SHORT_VERSION STREQUAL "")
-        string(TIMESTAMP GIT_SHORT_VERSION "%H%M%S")
-    endif ()
+#     if (GIT_SHORT_VERSION STREQUAL "")
+#         string(TIMESTAMP GIT_SHORT_VERSION "%H%M%S")
+#     endif ()
 
-    execute_process(
-            COMMAND git log -1 --pretty=format:%an
-            OUTPUT_VARIABLE GIT_AUTHOR
-    )
+#     execute_process(
+#             COMMAND git log -1 --pretty=format:%an
+#             OUTPUT_VARIABLE GIT_AUTHOR
+#     )
 
-    if (GIT_AUTHOR STREQUAL "")
-        set(GIT_AUTHOR "lucky.liu")
-    endif ()
+#     if (GIT_AUTHOR STREQUAL "")
+#         set(GIT_AUTHOR "lucky.liu")
+#     endif ()
 
-    execute_process(
-            COMMAND git rev-list --all --count
-            OUTPUT_VARIABLE VERSION_LEVEL3
-    )
+#     execute_process(
+#             COMMAND git rev-list --all --count
+#             OUTPUT_VARIABLE VERSION_LEVEL3
+#     )
 
-    if (VERSION_LEVEL3 STREQUAL "")
-        string(TIMESTAMP VERSION_LEVEL3 "%Y%m%d")
-    endif ()
+#     if (VERSION_LEVEL3 STREQUAL "")
+#         string(TIMESTAMP VERSION_LEVEL3 "%Y%m%d")
+#     endif ()
 
-    configure_file(
-            "config.h.in"
-            "../config.h"
-    )
-endfunction(generate_version)
+#     configure_file(
+#             "config.h.in"
+#             "../config.h"
+#     )
+# endfunction(generate_version)
 
 if (NOT DEFINED UTILITY_ROOT)
-    set(UTILITY_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty/utility)
+    set(UTILITY_ROOT ${CMAKE_CURRENT_LIST_DIR}/../)
 endif ()
 message(STATUS "UTILITY_ROOT: ${UTILITY_ROOT}")
 

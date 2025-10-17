@@ -9,7 +9,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 /*
- * @Descripttion:
+ * @Description:
  * @Author: lucky
  * @Date: 2023/8/1 8:45
  * @LastEditors: lucky

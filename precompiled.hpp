@@ -1,20 +1,21 @@
 /*
-* Copyright (c) 2018 Eyecool Inc. All rights reserved.
-*
-* The Original Code and all software distributed under the License are
-* distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
-* EXPRESS OR IMPLIED, AND EYECOOL HEREBY DISCLAIMS ALL SUCH WARRANTIES,
-* INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
-* Please see the License for the specific language governing rights and
-* limitations under the License.
-*
-* @Descripttion: Public Macro Definition
-* @Author: l2q
-* @Date: 2021/3/8 13:27
-* @LastEditors: lucky
-* @LastEditTime: 2023/4/7 8:15
-*/
+ * Copyright (c) 2018 Eyecool Inc. All rights reserved.
+ *
+ * The Original Code and all software distributed under the License are
+ * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+ * EXPRESS OR IMPLIED, AND EYECOOL HEREBY DISCLAIMS ALL SUCH WARRANTIES,
+ * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
+ * Please see the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * @Description: Public Macro Definition
+ * @Author: l2q
+ * @Date: 2021/3/8 13:27
+ * @LastEditors: lucky
+ * @LastEditTime: 2023/4/7 8:15
+ */
+
 
 #ifndef PRECOMPILED_HPP
 #define PRECOMPILED_HPP
@@ -57,4 +58,4 @@ public:                                                     \
 #define MAX_PATH 260
 #endif
 
-#endif // PRECOMPILED_HPP
+#endif  // PRECOMPILED_HPP

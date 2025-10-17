@@ -9,7 +9,7 @@
  * Please see the License for the specific language governing rights and
  * limitations under the License.
  *
- * @Descripttion: Public Macro Definition
+ * @Description: Public Macro Definition
  * @Author: l2q
  * @Date: 2021/3/8 13:27
  * @LastEditors: lucky
@@ -288,6 +288,26 @@ public:
             }
         }
         return result;
+    }
+
+    template<typename T>
+    static T* getVectorElementPtr(std::vector<T>& vec, size_t index)
+    {
+        if (index < vec.size())
+        {
+            return &vec[index];
+        }
+        return nullptr;
+    }
+
+    template<typename T>
+    static const T* getVectorElementPtr(const std::vector<T>& vec, size_t index)
+    {
+        if (index < vec.size())
+        {
+            return &vec[index];
+        }
+        return nullptr;
     }
 };
 }

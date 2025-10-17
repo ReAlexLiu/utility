@@ -1,9 +1,19 @@
 /*
- * @Descripttion:
- * @Author: lucky
- * @Date: 2023/8/2 11:27
- * @LastEditors: lucky
- * @LastEditTime: 2023/8/2 11:27
+ * Copyright (c) 2013 basf Inc. All rights reserved.
+ *
+ * The Original Code and all software distributed under the License are
+ * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+ * EXPRESS OR IMPLIED, AND BASF HEREBY DISCLAIMS ALL SUCH WARRANTIES,
+ * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
+ * Please see the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * @Description: Public Macro Definition
+ * @Author: l2q
+ * @Date: 2013/3/8 13:27
+ * @LastEditors: qingquan.liu
+ * @LastEditTime: 2015/4/7 15:15
  */
 
 #ifndef PROFILER_H
@@ -60,28 +70,34 @@ private:
 };
 }
 
-#define PROFILER()                                                                                                  \
-   utility::profiler p(                                                                                             \
-       __FILENAME__, __FUNCTION__, __LINE__,                                                                       \
-       [](const char* filename, const char* funcname, int line) {                                                  \
-           utility::xlogger::getInstance().log_(spdlog::level::trace, filename, funcname, line, "{} enter", funcname);  \
-       },                                                                                                          \
-       [](const char* filename, const char* funcname, int line, const char* message) {                             \
-           UNUSED(message);                                                                                        \
-           utility::xlogger::getInstance().log_(spdlog::level::trace, filename, funcname, line, "{} leavel", funcname); \
-       });
+#define PROFILER()                                                                                                       \
+    utility::profiler p(                                                                                                 \
+        __FILENAME__, __FUNCTION__, __LINE__,                                                                            \
+        [](const char* filename, const char* funcname, int line) {                                                       \
+            utility::xlogger::getInstance().log_(spdlog::level::trace, filename, funcname, line, "{} enter", funcname);  \
+        },                                                                                                               \
+        [](const char* filename, const char* funcname, int line, const char* message) {                                  \
+            UNUSED(message);                                                                                             \
+            utility::xlogger::getInstance().log_(spdlog::level::trace, filename, funcname, line, "{} leavel", funcname); \
+        });
 
-#define PROFILER_MESSAGE(message)                                                                                           \
-   utility::profiler p(                                                                                                     \
-       __FILENAME__, __FUNCTION__, __LINE__, message,                                                                      \
-       [](const char* filename, const char* funcname, int line, const char* msg) {                                         \
-           utility::xlogger::getInstance().log_(spdlog::level::trace, filename, funcname, line, "enter {}", msg);  \
-       },                                                                                                                  \
-       [](const char* filename, const char* funcname, int line, const char* msg) {                                         \
-           utility::xlogger::getInstance().log_(spdlog::level::trace, filename, funcname, line, "leavel {}", msg); \
-       });
+#define PROFILER_MESSAGE(message)                                                                                   \
+    utility::profiler p(                                                                                            \
+        __FILENAME__, __FUNCTION__, __LINE__, message,                                                              \
+        [](const char* filename, const char* funcname, int line, const char* msg) {                                 \
+            utility::xlogger::getInstance().log_(spdlog::level::trace, filename, funcname, line, "enter {}", msg);  \
+        },                                                                                                          \
+        [](const char* filename, const char* funcname, int line, const char* msg) {                                 \
+            utility::xlogger::getInstance().log_(spdlog::level::trace, filename, funcname, line, "leavel {}", msg); \
+        });
 #else
-#define PROFILER() do{}while(0)
-#define PROFILER_MESSAGE(message)  do{}while(0)
+#define PROFILER() \
+    do             \
+    {              \
+    } while (0)
+#define PROFILER_MESSAGE(message) \
+    do                            \
+    {                             \
+    } while (0)
 #endif
 #endif  // PROFILER_H
